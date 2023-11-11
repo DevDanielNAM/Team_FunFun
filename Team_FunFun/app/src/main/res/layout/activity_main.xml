@@ -9,7 +9,7 @@
     >
 
     <FrameLayout
-        android:id="@+id/mainFrame"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"  />
 
@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/white"
-        app:itemBackground="@color/white"
+        android:background="@drawable/bottom_nav_bar_round"
+        app:itemRippleColor="@color/rippleColor"
         app:itemActiveIndicatorStyle="@color/white"
         app:itemIconSize="49dp"
         app:itemIconTint="@color/navTint"
