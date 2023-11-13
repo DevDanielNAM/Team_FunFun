@@ -3,5 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="navTint">#030D45</color>
+    <color name="mainTopColor">#5A84EF</color>
+    <color name="addPageBtnColor">#D92D64F3</color>
+    <color name="editPageBtnColor">#D95AC2EF</color>
+    <color name="addBtnColor">#EB89A3FF</color>
     <color name="rippleColor">#D9D7E0F8</color>
 </resources>
