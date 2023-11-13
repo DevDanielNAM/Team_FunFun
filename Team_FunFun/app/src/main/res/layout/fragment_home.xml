@@ -5,10 +5,50 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="This is home fragment" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/main_top_round"
+            android:paddingTop="25dp"
+            android:text="Fun Fun Todo"
+            android:fontFamily="@font/dohyeon_regular"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="45sp"
+            android:textStyle="bold" />
+
+        <CalendarView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-90dp"
+            android:background="@drawable/calendar_round" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="380dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="15dp"
+            android:layout_gravity="center"
+            android:background="@color/black" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="380dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:background="@drawable/add_button_round"
+            android:fontFamily="@font/ibm_plex_sans_kr_medium"
+            android:text="+Todo 추가"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+
+    </LinearLayout>
+
 
 </FrameLayout>
