@@ -7,12 +7,27 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-public class HomeFragment extends Fragment {
+import android.widget.Button;
 
+public class HomeFragment extends Fragment {
+    AddTodoFragment addTodoFragment;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
+
+        addTodoFragment = new AddTodoFragment();
+        Button addBtn = rootView.findViewById(R.id.mainAddTodo);
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity)getActivity();
+                System.out.println("clicked");
+                assert mainActivity != null;
+                mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, addTodoFragment).commit();
+            }
+        });
+
+        return rootView;
     }
 }

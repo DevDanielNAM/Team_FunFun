@@ -7,5 +7,6 @@
     <color name="addPageBtnColor">#D92D64F3</color>
     <color name="editPageBtnColor">#D95AC2EF</color>
     <color name="addBtnColor">#EB89A3FF</color>
+    <color name="addBtnPressedColor">#EB6485F8</color>
     <color name="rippleColor">#D9D7E0F8</color>
 </resources>
