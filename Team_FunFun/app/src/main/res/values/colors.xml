@@ -4,9 +4,16 @@
     <color name="white">#FFFFFFFF</color>
     <color name="navTint">#030D45</color>
     <color name="mainTopColor">#5A84EF</color>
+    <color name="addTopColor">#D92D64F3</color>
+    <color name="editTopColor">#D95AC2EF</color>
     <color name="addPageBtnColor">#D92D64F3</color>
     <color name="editPageBtnColor">#D95AC2EF</color>
+    <color name="editPagePressedBtnColor">#D94CBBEC</color>
     <color name="addBtnColor">#EB89A3FF</color>
     <color name="addBtnPressedColor">#EB6485F8</color>
+    <color name="addCategoryBtnColor">#D95A84EF</color>
+    <color name="addCategoryBtnPressedColor">#D93367EA</color>
+    <color name="deleteCategoryBtnColor">#BFFF4141</color>
+    <color name="deleteCategoryPressedBtnColor">#BFFA1F1F</color>
     <color name="rippleColor">#D9D7E0F8</color>
 </resources>
