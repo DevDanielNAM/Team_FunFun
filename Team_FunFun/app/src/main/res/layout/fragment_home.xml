@@ -12,7 +12,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="180dp"
             android:background="@drawable/main_top_round"
             android:paddingTop="25dp"
             android:text="Fun Fun Todo"
@@ -23,6 +23,7 @@
             android:textStyle="bold" />
 
         <CalendarView
+            android:id="@+id/mainCalendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,7 +31,7 @@
             android:background="@drawable/calendar_round" />
 
         <View
-            android:id="@+id/divider2"
+            android:id="@+id/divider"
             android:layout_width="380dp"
             android:layout_height="1dp"
             android:layout_marginVertical="15dp"
@@ -38,12 +39,14 @@
             android:background="@color/black" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/mainAddTodo"
             android:layout_width="380dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
             android:background="@drawable/add_button_round"
             android:fontFamily="@font/ibm_plex_sans_kr_medium"
-            android:text="+Todo 추가"
+            android:textAllCaps="false"
+            android:text="+ Todo 추가"
             android:textColor="@color/white"
             android:textSize="24sp" />
 
