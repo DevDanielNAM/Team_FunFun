@@ -2,12 +2,15 @@ package com.example.team_funfun;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -20,6 +23,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,7 +41,9 @@ public class AddTodoFragment extends Fragment {
     EditText dateInput;
     EditText categoryInput;
     boolean isClicked = false;
-    String clickedCategory;
+    String clickedCategory = "";
+    ImageButton colorPicker;
+    HomeFragment homeFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +54,8 @@ public class AddTodoFragment extends Fragment {
         MainActivity mainActivity = (MainActivity)getActivity();
         assert mainActivity != null;
 
+        homeFragment = new HomeFragment();
+
         addTodo = rootView.findViewById(R.id.addTodo);
         addCategory = rootView.findViewById(R.id.addCategory);
         deleteCategory = rootView.findViewById(R.id.delteCategory);
@@ -54,6 +63,7 @@ public class AddTodoFragment extends Fragment {
         todoInput = rootView.findViewById(R.id.todoInput);
         dateInput = rootView.findViewById(R.id.dateInput);
         categoryInput = rootView.findViewById(R.id.categoryInput);
+        colorPicker = rootView.findViewById(R.id.colorPicker);
 
         showCalendar(mainActivity, dateInput);
 
@@ -62,7 +72,19 @@ public class AddTodoFragment extends Fragment {
         addCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(categoryInput.getText().toString().compareTo("") != 0) {
+                AlertDialog.Builder denyDialog = new AlertDialog.Builder(getContext());
+
+                if(mainActivity.getCategoryCount() > 5) {
+                    denyDialog.setTitle("미입력!");
+                    denyDialog.setMessage("카테고리는 최대 6개까지 가능합니다!");
+                    denyDialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    denyDialog.show();
+                } else if(categoryInput.getText().toString().compareTo("") != 0) {
                     mainActivity.insertCategoryData(categoryInput.getText().toString(),"#BFFF4141");
                     categoryInput.setText("");
                     renderCategoryBtn(mainActivity);
@@ -83,14 +105,72 @@ public class AddTodoFragment extends Fragment {
         addTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!todoInput.getText().toString().equals("")
-                && !dateInput.getText().toString().equals("")
-                && !clickedCategory.equals("")) {
-                    mainActivity.insertTodoData(todoInput.getText().toString(),
-                            Date.valueOf(dateInput.getText().toString()),
-                            0,
-                            clickedCategory);
+                AlertDialog.Builder addDialog = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder denyDialog = new AlertDialog.Builder(getContext());
+
+                if(todoInput.getText().toString().equals("")
+                        || dateInput.getText().toString().equals("")
+                        || clickedCategory.equals("")) {
+                    denyDialog.setTitle("미입력!");
+                    denyDialog.setMessage("모든 항목을 입력해주세요!");
+                    denyDialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    denyDialog.show();
+                } else {
+                    addDialog.setTitle("Todo 추가");
+                    addDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    addDialog.setPositiveButton("추가", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(!todoInput.getText().toString().equals("")
+                                    && !dateInput.getText().toString().equals("")
+                                    && !clickedCategory.equals("")) {
+                                mainActivity.insertTodoData(todoInput.getText().toString(),
+                                        Date.valueOf(dateInput.getText().toString()),
+                                        0,
+                                        clickedCategory);
+                            }
+                            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+                            dialog.dismiss();
+                        }
+                    });
+                    addDialog.show();
                 }
+            }
+
+        });
+
+        colorPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder menu = new AlertDialog.Builder(getContext());
+                menu.setTitle("카테고리 색상 선택");
+
+                menu.setView(R.layout.color_picker);
+
+                menu.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                menu.setPositiveButton("선택", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                menu.show();
             }
         });
 
@@ -161,13 +241,13 @@ public class AddTodoFragment extends Fragment {
         newCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isClicked) {
+                if(!isClicked) {
                     newCategoryBtn.setBackgroundDrawable(clickedDrawable);
                     clickedCategory = newCategoryBtn.getText().toString();
-                    isClicked = false;
+                    isClicked = true;
                 } else {
                     newCategoryBtn.setBackgroundDrawable(unclickedDrawable);
-                    isClicked = true;
+                    isClicked = false;
                 }
             }
         });

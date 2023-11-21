@@ -1,7 +1,10 @@
 package com.example.team_funfun;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -74,14 +77,15 @@ public class MainActivity extends AppCompatActivity {
         println("createTodoTable() 호출됨.");
         todoDb.execSQL("PRAGMA foreign_keys = ON");
         if(todoDb!= null) {
+            String sqlCategory = "create table if not exists Category(categoryName text PRIMARY KEY, color text)";
+            todoDb.execSQL(sqlCategory);
+            println("Category 테이블 생성됨.");
+
             String sqlTodo = "create table if not exists Todo(_id integer PRIMARY KEY autoincrement," +
                     " todo text, date datetime, state integer, category text, FOREIGN KEY(category) REFERENCES Category(categoryName) ON DELETE RESTRICT)";
             todoDb.execSQL(sqlTodo);
             println("Todo 테이블 생성됨.");
 
-            String sqlCategory = "create table if not exists Category(categoryName text PRIMARY KEY, color text)";
-            todoDb.execSQL(sqlCategory);
-            println("Category 테이블 생성됨.");
         } else {
             println("데이터베이스를 먼저 오픈하세요");
         }
@@ -102,12 +106,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* Todo table에 저장된 Data들 조회 */
-    public List<String[]> getTodoData(){
+//    public List<String[]> getTodoData(){
+//        println("getTodoData() 호출됨.");
+//        List<String[]> todoList = new ArrayList<>();
+//        if(todoDb != null){
+//            String sql = "select todo, date, state, category, Category.color from Todo " +
+//                    "inner join Category on Todo.category = Category.categoryName";
+//            Cursor cursor = todoDb.rawQuery(sql, null);
+//            println("조회된 데이터개수 :" + cursor.getCount());
+//
+//            while (cursor.moveToNext()){
+//                String todo = cursor.getString(0);
+//                Date date = Date.valueOf(cursor.getString(1));
+//                int state = cursor.getInt(2);
+//                String category = cursor.getString(3);
+//                String color = cursor.getString(4);
+//                String[] todoData = {todo, date.toString(), String.valueOf(state), category, color};
+//                todoList.add(todoData);
+//            }
+//            cursor.close();
+//            return todoList;
+//        }
+//        return null;
+//    }
+
+    /* Todo table에서 전달받은 category에 해당하는 모든 Data들을 조회 */
+    public List<String[]> getTodoData(String paramCategory){
         println("getTodoData() 호출됨.");
         List<String[]> todoList = new ArrayList<>();
         if(todoDb != null){
-            String sql = "select todo, date, state, category, Category.color from Todo " +
-                    "inner join Category on Todo.category = Category.categoryName";
+            String sql = "select todo, date, state, category, _id from Todo where category = " + "'" + paramCategory + "'";
             Cursor cursor = todoDb.rawQuery(sql, null);
             println("조회된 데이터개수 :" + cursor.getCount());
 
@@ -116,9 +144,10 @@ public class MainActivity extends AppCompatActivity {
                 Date date = Date.valueOf(cursor.getString(1));
                 int state = cursor.getInt(2);
                 String category = cursor.getString(3);
-                String color = cursor.getString(4);
-                String[] todoData = {todo, date.toString(), String.valueOf(state), category, color};
+                int id = cursor.getInt(4);
+                String[] todoData = {todo, date.toString(), String.valueOf(state), category, String.valueOf(id)};
                 todoList.add(todoData);
+                println(todo + date + state + category + id);
             }
             cursor.close();
             return todoList;
@@ -127,15 +156,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* 전달받은 Data들로 Todo table 수정 */
-    public void updateTodoData(String todo, Date date, int state, String category) {
+    public void updateTodoData(String todo, Date date, int state, String category, int _id) {
         println("updateTodoData() 호출됨.");
+        try {
+            if(todoDb != null && !todo.equals("") && !category.equals("") && !date.toString().equals("")) {
+                String sql = "update Todo set todo = ?, date = ?, state = ?, category = ? where _id = ?";
+                Object[] params = {todo, date, state, category, _id};
+                todoDb.execSQL(sql, params);
+                println("Todo 데이터 수정함");
+            }
+        } catch (Exception e) {
+            println(e.toString());
+            println("수정할 데이터를 입력하세요");
+        }
+    }
 
-        if(todoDb != null && !todo.equals("") && !category.equals("") && !date.toString().equals("")) {
-            String sql = "update Todo set todo = ?, date = ?, state = ?, category = ?";
-            Object[] params = {todo, date, state, category};
-            todoDb.execSQL(sql, params);
-            println("Todo 데이터 수정함");
-        } else {
+    /* Todo table에서 체크 여부에 따른 state 변경 */
+    public void updateTodoState(int id, int state) {
+        println("updateTodoState() 호출됨.");
+        try {
+            if(todoDb != null) {
+                String sql = "update Todo set state = ? where _id = ?";
+                Object[] params = {state, id};
+                todoDb.execSQL(sql, params);
+                println(id + "," + state);
+                println("Todo state 수정함");
+            }
+        } catch (Exception e) {
+            println(e.toString());
             println("수정할 데이터를 입력하세요");
         }
     }
@@ -176,23 +224,6 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-//    public boolean isTodoExistCategory(String findCategory){
-//        println("selectTodoData() 호출됨.");
-//        if(todoDb != null){
-//            String sql = "select category from Todo";
-//            Cursor cursor = todoDb.rawQuery(sql, null);
-//            println("조회된 데이터개수 :" + cursor.getCount());
-//
-//            while (cursor.moveToNext()){
-//                String category = cursor.getString(0);
-//                if(category.equals(findCategory)) {
-//                    return true;
-//                }
-//            }
-//            cursor.close();
-//        }
-//        return false;
-//    }
     /* Category table에 Data 저장 */
     public void insertCategoryData(String category, String color){
         println("insertCategoryData() 호출됨.");
@@ -209,35 +240,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    public int getCategoryCount(){
-//        println("getCategoryCount() 호출됨.");
-//        if(todoDb != null){
-//            String sql = "select categoryName from Category";
-//            Cursor cursor = todoDb.rawQuery(sql, null);
-//            int cnt = cursor.getCount();
-//            cursor.close();
-//            return cnt;
-//        }
-//        return 0;
-//    }
-
-//    public boolean isExistCategoryData(String findCategory){
-//        println("isExistCategoryData() 호출됨.");
-//        if(todoDb != null){
-//            String sql = "select categoryName from Category";
-//            Cursor cursor = todoDb.rawQuery(sql, null);
-//            println("조회된 데이터개수 :" + cursor.getCount());
-//
-//            while(cursor.moveToNext()) {
-//                String category = cursor.getString(0);
-//                if(category.equals(findCategory)) {
-//                    return false;
-//                }
-//            }
-//            cursor.close();
-//        }
-//        return true;
-//    }
+    /* Category table에 저장된 category 개수 조회 */
+    public int getCategoryCount(){
+        println("getCategoryCount() 호출됨.");
+        if(todoDb != null){
+            String sql = "select categoryName from Category";
+            Cursor cursor = todoDb.rawQuery(sql, null);
+            int cnt = cursor.getCount();
+            cursor.close();
+            return cnt;
+        }
+        return 0;
+    }
 
     /* Category table에 저장된 Data들 조회 */
     public List<String[]> getCategoryData(){
@@ -272,6 +286,18 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             println(e.toString());
+            AlertDialog.Builder denyDialog = new AlertDialog.Builder(this);
+
+            denyDialog.setTitle("카테고리 삭제 불가!");
+            denyDialog.setMessage("Todo에 사용 중인 카테고리입니다!");
+            denyDialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            denyDialog.show();
+
         }
     }
 

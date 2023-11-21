@@ -2,6 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green">#8BC34A</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="red">#E91E63</color>
     <color name="navTint">#030D45</color>
     <color name="mainTopColor">#5A84EF</color>
     <color name="addTopColor">#D92D64F3</color>
