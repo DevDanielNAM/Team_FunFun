@@ -10,22 +10,28 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryFragment extends Fragment {
-    private LinearLayout categoryContainer;
+    private GridLayout categoryContainer;
+    private RecyclerView recyclerView;
+    private TodoAdapter todoAdapter;
+    private List<Todo> todoList;
     boolean isClicked = false;
-    String clickedCategory;
     FloatingActionButton floatingAddBtn;
     AddTodoFragment addTodoFragment;
 
@@ -34,8 +40,15 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_category, container, false);
 
-        MainActivity mainActivity = (MainActivity)getActivity();
+        MainActivity mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
+
+        todoList = new ArrayList<>();
+        todoAdapter = new TodoAdapter(todoList, mainActivity.getSupportFragmentManager(), mainActivity);
+
+        recyclerView = rootView.findViewById(R.id.todoContainer);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(todoAdapter);
 
         addTodoFragment = new AddTodoFragment();
 
@@ -54,9 +67,8 @@ public class CategoryFragment extends Fragment {
         return rootView;
     }
 
-    private void addCategoryBtn(String todo, String date, String state, String category, String color) {
+    private void addCategoryBtn(String category, String color, MainActivity mainActivity) {
         AppCompatButton newCategoryBtn = new AppCompatButton(getContext());
-        TextView todoTextView = new TextView(getContext());
 
         int textColor = getContrastColor(color);
         int clickedColor = adjustColor(Color.parseColor(color), 0.8f);
@@ -68,19 +80,12 @@ public class CategoryFragment extends Fragment {
         newCategoryBtn.setTextColor(textColor);
         newCategoryBtn.setAllCaps(false);
 
-        todoTextView.setTypeface(typeface);
-        todoTextView.setText(todo);
-        todoTextView.setTextSize(20);
-        todoTextView.setAllCaps(false);
-
-        // 전달받은 color를 unclicked 상태의 버튼에 적용
         Drawable unclickedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.unclicked_category_button);
         GradientDrawable gradientUnclickedDrawable = (GradientDrawable) unclickedDrawable;
         if (gradientUnclickedDrawable != null) {
             gradientUnclickedDrawable.setColor(Color.parseColor(color));
         }
 
-        // 전달받은 color를 clicked 상태의 버튼에 적용
         Drawable clickedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.clicked_category_button);
         GradientDrawable gradientClickedDrawable = (GradientDrawable) clickedDrawable;
         if (gradientClickedDrawable != null) {
@@ -88,26 +93,31 @@ public class CategoryFragment extends Fragment {
         }
 
         newCategoryBtn.setBackgroundDrawable(unclickedDrawable);
-        LinearLayout linearLayout = new LinearLayout(getContext());
 
         newCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    if(isClicked) {
+                    if (isClicked) {
                         newCategoryBtn.setBackgroundDrawable(clickedDrawable);
-                        clickedCategory = newCategoryBtn.getText().toString();
-                        linearLayout.addView(todoTextView);
+                        List<String[]> todoList = mainActivity.getTodoData(category);
+                        for (String[] todoData : todoList) {
+                            addTodoItem(todoData[0],                // todo content
+                                    Date.valueOf(todoData[1]),      // date
+                                    Integer.parseInt(todoData[2]),  // state
+                                    category,                       // category
+                                    Integer.parseInt(todoData[4])); // _id
+                        }
                         isClicked = false;
                     } else {
                         newCategoryBtn.setBackgroundDrawable(unclickedDrawable);
-                        linearLayout.removeView(todoTextView);
+                        todoList.clear();
+                        todoAdapter.notifyDataSetChanged();
                         isClicked = true;
                     }
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
-
             }
         });
 
@@ -119,24 +129,18 @@ public class CategoryFragment extends Fragment {
         layoutParams.setMargins(marginInPixels, marginInPixels, marginInPixels, marginInPixels);
 
         categoryContainer.addView(newCategoryBtn, layoutParams);
-        categoryContainer.addView(linearLayout, layoutParams);
     }
 
-//    private void addTodo(String todo, String date, String state, String category) {
-//        TextView todoTextView = new TextView(getContext());
-//
-//        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.ibm_plex_sans_kr_medium);
-//        todoTextView.setTypeface(typeface);
-//        todoTextView.setText(todo);
-//        todoTextView.setTextSize(20);
-//        todoTextView.setAllCaps(false);
-//
-//    }
+    private void addTodoItem(String content, Date date , int state, String category, int id) {
+        Todo todo = new Todo(content, date, state, category, id);
+        todoList.add(todo);
+        todoAdapter.notifyItemInserted(todoList.size() - 1);
+    }
 
     private int adjustColor(int color, float factor) {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
-        hsv[2] *= factor; // adjust brightness
+        hsv[2] *= factor;
         return Color.HSVToColor(hsv);
     }
 
@@ -145,39 +149,17 @@ public class CategoryFragment extends Fragment {
         int red = Color.red(backgroundRgb);
         int green = Color.green(backgroundRgb);
         int blue = Color.blue(backgroundRgb);
-
-        // Calculate relative luminance using the formula
         double luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255.0;
-
-        // Choose black or white text based on the luminance value
         return luminance > 0.5 ? Color.BLACK : Color.WHITE;
     }
 
-    // DB에서 카테고리 항목을 조회해서 카테고리 버튼을 렌더
     private void renderCategoryBtn(MainActivity mainActivity) {
-//        categoryContainer.removeAllViews();
-
-//        List<String[]> getCategoryList = mainActivity.getCategoryData();
-//        if (getCategoryList != null) {
-//            for (String[] categoryData : getCategoryList) {
-//                addCategoryBtn(categoryData[0], categoryData[1]);
-//            }
-//        }
-
-        List<String[]> getTodoList = mainActivity.getTodoData();
-        if (getTodoList != null) {
-            for (String[] categoryData : getTodoList) {
-                addCategoryBtn(categoryData[0], categoryData[1], categoryData[2], categoryData[3], categoryData[4]);
+        categoryContainer.removeAllViews();
+        List<String[]> getCategoryList = mainActivity.getCategoryData();
+        if (getCategoryList != null) {
+            for (String[] categoryData : getCategoryList) {
+                addCategoryBtn(categoryData[0], categoryData[1], mainActivity);
             }
         }
     }
-
-//    private void renderTodo(MainActivity mainActivity) {
-//        List<String[]> getTodoList = mainActivity.getTodoData();
-//        if (getTodoList != null) {
-//            for (String[] categoryData : getTodoList) {
-//                addTodo(categoryData[0], categoryData[1], categoryData[2], categoryData[3]);
-//            }
-//        }
-//    }
 }
