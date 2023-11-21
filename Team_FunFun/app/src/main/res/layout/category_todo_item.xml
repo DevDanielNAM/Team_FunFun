@@ -29,7 +29,7 @@
         android:layout_marginRight="10dp"
         android:fontFamily="@font/ibm_plex_sans_kr_light"
         android:gravity="center_vertical"
-        android:lineHeight="20dp"
+        android:lineHeight="33dp"
         android:text="test"
         android:textSize="24sp" />
 
