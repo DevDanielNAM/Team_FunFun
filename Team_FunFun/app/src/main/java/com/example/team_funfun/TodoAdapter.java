@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Date;
 import java.util.List;
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder> {
+public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
     private List<Todo> todoList;
     private FragmentManager fragmentManager;
@@ -129,22 +129,5 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     @Override
     public int getItemCount() {
         return todoList.size();
-    }
-
-    static class TodoViewHolder extends RecyclerView.ViewHolder {
-        ImageButton checkedBox;
-        TextView todoContent;
-        ImageButton editTodo;
-        ImageButton deleteTodo;
-        TextView deadLine;
-
-        TodoViewHolder(@NonNull View itemView) {
-            super(itemView);
-            checkedBox = itemView.findViewById(R.id.checkedBox);
-            todoContent = itemView.findViewById(R.id.todoContent);
-            editTodo = itemView.findViewById(R.id.editTodo);
-            deleteTodo = itemView.findViewById(R.id.deleteTodo);
-            deadLine = itemView.findViewById(R.id.deadLine);
-        }
     }
 }
