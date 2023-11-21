@@ -84,10 +84,20 @@ public class AddTodoFragment extends Fragment {
                         }
                     });
                     denyDialog.show();
-                } else if(categoryInput.getText().toString().compareTo("") != 0) {
+                } else if(!categoryInput.getText().toString().equals("")) {
                     mainActivity.insertCategoryData(categoryInput.getText().toString(),"#BFFF4141");
                     categoryInput.setText("");
                     renderCategoryBtn(mainActivity);
+                } else {
+                    denyDialog.setTitle("미입력!");
+                    denyDialog.setMessage("추가할 카테고리를 입력해주세요!");
+                    denyDialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    denyDialog.show();
                 }
             }
         });
@@ -95,9 +105,20 @@ public class AddTodoFragment extends Fragment {
         deleteCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(clickedCategory != null) {
+                if(!clickedCategory.equals("")) {
                     mainActivity.deleteCategoryData(clickedCategory);
                     renderCategoryBtn(mainActivity);
+                } else {
+                    AlertDialog.Builder denyDialog = new AlertDialog.Builder(getContext());
+                    denyDialog.setTitle("미선택!");
+                    denyDialog.setMessage("삭제할 카테고리를 선택해주세요!");
+                    denyDialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    denyDialog.show();
                 }
             }
         });
@@ -122,6 +143,7 @@ public class AddTodoFragment extends Fragment {
                     denyDialog.show();
                 } else {
                     addDialog.setTitle("Todo 추가");
+                    addDialog.setMessage("Todo를 추가하시겠습니까?");
                     addDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -173,15 +195,6 @@ public class AddTodoFragment extends Fragment {
                 menu.show();
             }
         });
-
-//        mainActivity.updateTodoData(todoInput.getText().toString(),
-//                Date.valueOf(dateInput.getText().toString()),
-//                0,
-//                clickedCategory);
-
-//        List<String[]> getTodoData = mainActivity.getTodoData();
-//        for(String[] todoData : getTodoData)
-//            System.out.println(todoData[0] + todoData[1] + todoData[2] + todoData[3] + todoData[4]);
 
         return rootView;
     }
@@ -265,7 +278,7 @@ public class AddTodoFragment extends Fragment {
     private int adjustColor(int color, float factor) {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
-        hsv[2] *= factor; // adjust brightness
+        hsv[2] *= factor;
         return Color.HSVToColor(hsv);
     }
 
@@ -275,10 +288,8 @@ public class AddTodoFragment extends Fragment {
         int green = Color.green(backgroundRgb);
         int blue = Color.blue(backgroundRgb);
 
-        // Calculate relative luminance using the formula
         double luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255.0;
 
-        // Choose black or white text based on the luminance value
         return luminance > 0.5 ? Color.BLACK : Color.WHITE;
     }
 
