@@ -77,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
         println("createTodoTable() 호출됨.");
         todoDb.execSQL("PRAGMA foreign_keys = ON");
         if(todoDb!= null) {
-            String sqlCategory = "create table if not exists Category(categoryName text PRIMARY KEY, color text)";
+            String sqlCategory = "create table if not exists Category(categoryName text PRIMARY KEY, color text NOT NULL)";
             todoDb.execSQL(sqlCategory);
             println("Category 테이블 생성됨.");
 
             String sqlTodo = "create table if not exists Todo(_id integer PRIMARY KEY autoincrement," +
-                    " todo text, date datetime, state integer, category text, FOREIGN KEY(category) REFERENCES Category(categoryName) ON DELETE RESTRICT)";
+                    " todo text NOT NULL, date datetime NOT NULL, state integer NOT NULL, category text NOT NULL, FOREIGN KEY(category) REFERENCES Category(categoryName) ON DELETE RESTRICT)";
             todoDb.execSQL(sqlTodo);
             println("Todo 테이블 생성됨.");
 
@@ -95,13 +95,15 @@ public class MainActivity extends AppCompatActivity {
     public void insertTodoData(String todo, Date date, int state, String category){
         println("insertTodoData() 호출됨.");
 
-        if(todoDb != null && !todo.equals("") && !category.equals("") && !date.toString().equals("")) {
-            String sql = "insert into Todo(todo, date, state, category) values(?, ?, ?, ?)";
-            Object[] params = {todo, date, state, category};
-            todoDb.execSQL(sql, params);
-            println("Todo 데이터 추가함");
-        } else {
-            println("데이터베이스를 먼저 오픈하시오");
+        try {
+            if(todoDb != null && !todo.equals("") && !category.equals("") && !date.toString().equals("")) {
+                String sql = "insert into Todo(todo, date, state, category) values(?, ?, ?, ?)";
+                Object[] params = {todo, date, state, category};
+                todoDb.execSQL(sql, params);
+                println("Todo 데이터 추가함");
+            }
+        } catch (Exception e) {
+            println(e.toString());
         }
     }
 
