@@ -77,18 +77,37 @@ public class MainActivity extends AppCompatActivity {
         println("createTodoTable() 호출됨.");
         todoDb.execSQL("PRAGMA foreign_keys = ON");
         if(todoDb!= null) {
-            String sqlCategory = "create table if not exists Category(categoryName text PRIMARY KEY, color text NOT NULL)";
+            String sqlCategory = "CREATE TABLE IF NOT EXISTS Category(categoryName text PRIMARY KEY, color text NOT NULL)";
             todoDb.execSQL(sqlCategory);
             println("Category 테이블 생성됨.");
 
-            String sqlTodo = "create table if not exists Todo(_id integer PRIMARY KEY autoincrement," +
+            String sqlTodo = "CREATE TABLE IF NOT EXISTS Todo(_id integer PRIMARY KEY autoincrement," +
                     " todo text NOT NULL, date datetime NOT NULL, state integer NOT NULL, category text NOT NULL, FOREIGN KEY(category) REFERENCES Category(categoryName) ON DELETE RESTRICT)";
             todoDb.execSQL(sqlTodo);
             println("Todo 테이블 생성됨.");
 
+            if (isTableEmpty("Category")) {
+                todoDb.execSQL("INSERT INTO Category (categoryName, color) VALUES ('오늘까지', '#BFFF4141')");
+                todoDb.execSQL("INSERT INTO Category (categoryName, color) VALUES ('할 일', '#8AC0E7')");
+                todoDb.execSQL("INSERT INTO Category (categoryName, color) VALUES ('스터디', '#EB89A4FF')");
+            }
+
+            if (isTableEmpty("Todo")) {
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('OSS 온라인 강의', '2023-12-01', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('자료구조 과제', '2023-12-03', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('알고리즘', '2023-12-23', 0, '스터디')");
+            }
         } else {
             println("데이터베이스를 먼저 오픈하세요");
         }
+    }
+
+    private boolean isTableEmpty(String tableName) {
+        Cursor cursor = todoDb.rawQuery("SELECT COUNT(*) FROM " + tableName, null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        return count == 0;
     }
 
     /* Todo talbe에 Data 저장 */
@@ -97,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             if(todoDb != null && !todo.equals("") && !category.equals("") && !date.toString().equals("")) {
-                String sql = "insert into Todo(todo, date, state, category) values(?, ?, ?, ?)";
+                String sql = "INSERT INTO Todo(todo, date, state, category) VALUES(?, ?, ?, ?)";
                 Object[] params = {todo, date, state, category};
                 todoDb.execSQL(sql, params);
                 println("Todo 데이터 추가함");
@@ -137,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         println("getTodoData() 호출됨.");
         List<String[]> todoList = new ArrayList<>();
         if(todoDb != null){
-            String sql = "select todo, date, state, category, _id from Todo where category = " + "'" + paramCategory + "'";
+            String sql = "SELECT todo, date, state, category, _id FROM Todo WHERE category = " + "'" + paramCategory + "'";
             Cursor cursor = todoDb.rawQuery(sql, null);
             println("조회된 데이터개수 :" + cursor.getCount());
 
@@ -162,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         println("updateTodoData() 호출됨.");
         try {
             if(todoDb != null && !todo.equals("") && !category.equals("") && !date.toString().equals("")) {
-                String sql = "update Todo set todo = ?, date = ?, state = ?, category = ? where _id = ?";
+                String sql = "UPDATE Todo SET todo = ?, date = ?, state = ?, category = ? WHERE _id = ?";
                 Object[] params = {todo, date, state, category, _id};
                 todoDb.execSQL(sql, params);
                 println("Todo 데이터 수정함");
@@ -178,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         println("updateTodoState() 호출됨.");
         try {
             if(todoDb != null) {
-                String sql = "update Todo set state = ? where _id = ?";
+                String sql = "UPDATE Todo SET state = ? WHERE _id = ?";
                 Object[] params = {state, id};
                 todoDb.execSQL(sql, params);
                 println(id + "," + state);
@@ -195,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
         println("delteTodoData() 호출됨.");
         try {
             if(todoDb != null && !todo.equals("")){
-                String sql = "delete from Todo where todo = ?";
+                String sql = "DELETE FROM Todo WHERE todo = ?";
                 Object[] params = {todo};
                 todoDb.execSQL(sql, params);
                 println("데이터 삭제함");
@@ -231,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         println("insertCategoryData() 호출됨.");
         try {
             if(todoDb != null && !category.equals("")){
-                String sql = "insert into Category(categoryName, color) values(?, ?)";
+                String sql = "INSERT INTO Category(categoryName, color) VALUES(?, ?)";
                 Object[] params = {category, color};
                 todoDb.execSQL(sql, params);
                 println("데이터 추가함");
@@ -246,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     public int getCategoryCount(){
         println("getCategoryCount() 호출됨.");
         if(todoDb != null){
-            String sql = "select categoryName from Category";
+            String sql = "SELECT categoryName FROM Category";
             Cursor cursor = todoDb.rawQuery(sql, null);
             int cnt = cursor.getCount();
             cursor.close();
@@ -260,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
         println("getCategoryData() 호출됨.");
         List<String[]> categoryList = new ArrayList<>();
         if(todoDb != null){
-            String sql = "select categoryName, color from Category";
+            String sql = "SELECT categoryName, color FROM Category";
             Cursor cursor = todoDb.rawQuery(sql, null);
             println("조회된 데이터개수 :" + cursor.getCount());
 
@@ -281,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
         println("delteCategoryData() 호출됨.");
         try {
             if(todoDb != null && !category.equals("")){
-                String sql = "delete from Category where categoryName = ?";
+                String sql = "DELETE FROM Category WHERE categoryName = ?";
                 Object[] params = {category};
                 todoDb.execSQL(sql, params);
                 println("데이터 삭제함");
