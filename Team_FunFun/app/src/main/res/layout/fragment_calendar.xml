@@ -7,7 +7,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".CalendarFragment">
-
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:fontFamily="@font/dohyeon_regular"
+        android:paddingTop="25dp"
+        android:text="캘린더 Todo"
+        android:textAlignment="center"
+        android:textSize="45sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +26,8 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         >
-        <Button
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/previousButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,7 +46,7 @@
             android:textSize="20sp"
             android:textAlignment="center"
             android:textColor="@color/black" />
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/nextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -107,8 +119,36 @@
             android:textAlignment="center"
             android:textSize="16sp"/>
     </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/calendarRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendarRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginVertical="15dp"
+            android:background="@color/rippleColor"/>
+
+        <!--
+            todoRecyclerView는 match_parent로 설정되어 calendarRecyclerView 아래로 표시됩니다.
+            만약 특정 높이를 유지하고 싶다면, layout_height 값을 원하는 값으로 변경하세요.
+        -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="100dp" />
+    </LinearLayout>
+
+
 </LinearLayout>
