@@ -40,7 +40,6 @@ public class EditTodoFragment extends Fragment {
     EditText categoryInput;
     ImageButton colorPicker;
     HomeFragment homeFragment;
-    boolean isClicked = false;
     String clickedCategory = "";
     String content;
     String date;
@@ -247,8 +246,9 @@ public class EditTodoFragment extends Fragment {
         });
     }
 
+    private AppCompatButton clickedButton = null;
     // 카테고리 버튼 생성
-    private void addCategoryBtn(String category, String color) {
+    private void addCategoryBtn(String category, String color, MainActivity mainActivity) {
         AppCompatButton newCategoryBtn = new AppCompatButton(getContext());
         int textColor = getContrastColor(color);
         int clickedColor = adjustColor(Color.parseColor(color), 0.8f);
@@ -280,14 +280,23 @@ public class EditTodoFragment extends Fragment {
         newCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isClicked) {
-                    newCategoryBtn.setBackgroundDrawable(clickedDrawable);
-                    clickedCategory = newCategoryBtn.getText().toString();
-                    isClicked = true;
-                } else {
-                    newCategoryBtn.setBackgroundDrawable(unclickedDrawable);
-                    isClicked = false;
+                // 클릭된 버튼이 있으면 원래 색상으로 돌리기
+                if (clickedButton != null) {
+                    Drawable unclickedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.unclicked_category_button);
+                    GradientDrawable gradientUnclickedDrawable = (GradientDrawable) unclickedDrawable;
+                    if (gradientUnclickedDrawable != null) {
+                        gradientUnclickedDrawable.setColor(Color.parseColor(mainActivity.getCategoryColor(clickedButton.getText().toString())));
+                    }
+
+                    clickedButton.setBackgroundDrawable(unclickedDrawable);
                 }
+
+                // 현재 클릭된 버튼 설정
+                clickedButton = newCategoryBtn;
+
+                // 현재 클릭된 버튼을 clickedDrawable로 변경
+                newCategoryBtn.setBackgroundDrawable(clickedDrawable);
+                clickedCategory = newCategoryBtn.getText().toString();
             }
         });
 
@@ -325,7 +334,7 @@ public class EditTodoFragment extends Fragment {
         List<String[]> getCategoryList = mainActivity.getCategoryData();
         if (getCategoryList != null) {
             for (String[] categoryData : getCategoryList) {
-                addCategoryBtn(categoryData[0], categoryData[1]);
+                addCategoryBtn(categoryData[0], categoryData[1], mainActivity);
             }
         }
     }
