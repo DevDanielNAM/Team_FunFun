@@ -274,6 +274,23 @@ public class MainActivity extends AppCompatActivity {
         return 0;
     }
 
+    /* Category table에서 전달받은 categroy로 color 검색 */
+    public String getCategoryColor(String category){
+        println("getCategoryColor() 호출됨.");
+        if(todoDb != null){
+            String sql = "SELECT color FROM Category WHERE categoryName = " + "'" + category + "'";
+            Cursor cursor = todoDb.rawQuery(sql, null);
+            String color = "";
+            while (cursor.moveToNext()){
+                color = cursor.getString(0);
+            }
+            cursor.close();
+            println(color);
+            return color;
+        }
+        return null;
+    }
+
     /* Category table에 저장된 Data들 조회 */
     public List<String[]> getCategoryData(){
         println("getCategoryData() 호출됨.");

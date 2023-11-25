@@ -30,7 +30,6 @@ public class CategoryFragment extends Fragment {
     private RecyclerView recyclerView;
     private TodoAdapter todoAdapter;
     private List<Todo> todoList;
-    boolean isClicked = false;
     FloatingActionButton floatingAddBtn;
     AddTodoFragment addTodoFragment;
 
@@ -66,6 +65,8 @@ public class CategoryFragment extends Fragment {
         return rootView;
     }
 
+    private AppCompatButton clickedButton = null;
+
     private void addCategoryBtn(String category, String color, MainActivity mainActivity) {
         AppCompatButton newCategoryBtn = new AppCompatButton(getContext());
 
@@ -97,8 +98,24 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    if (isClicked) {
+                    // 클릭된 버튼이 있으면 원래 색상으로 돌리기
+                    if (clickedButton != null) {
+                        Drawable unclickedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.unclicked_category_button);
+                        GradientDrawable gradientUnclickedDrawable = (GradientDrawable) unclickedDrawable;
+                        if (gradientUnclickedDrawable != null) {
+                            gradientUnclickedDrawable.setColor(Color.parseColor(mainActivity.getCategoryColor(clickedButton.getText().toString())));
+                        }
+
+                        clickedButton.setBackgroundDrawable(unclickedDrawable);
+                        todoList.clear();
+                        todoAdapter.notifyDataSetChanged();
+                    }
+                        // 현재 클릭된 버튼 설정
+                        clickedButton = newCategoryBtn;
+
+                        // 현재 클릭된 버튼을 clickedDrawable로 변경
                         newCategoryBtn.setBackgroundDrawable(clickedDrawable);
+
                         List<String[]> todoList = mainActivity.getTodoData(category);
                         for (String[] todoData : todoList) {
                             addTodoItem(todoData[0],                // todo content
@@ -106,13 +123,7 @@ public class CategoryFragment extends Fragment {
                                     Integer.parseInt(todoData[2]),  // state
                                     category,                       // category
                                     Integer.parseInt(todoData[4])); // _id
-                        }
-                        isClicked = false;
-                    } else {
-                        newCategoryBtn.setBackgroundDrawable(unclickedDrawable);
-                        todoList.clear();
-                        todoAdapter.notifyDataSetChanged();
-                        isClicked = true;
+
                     }
                 } catch (Exception e) {
                     System.out.println(e.toString());
