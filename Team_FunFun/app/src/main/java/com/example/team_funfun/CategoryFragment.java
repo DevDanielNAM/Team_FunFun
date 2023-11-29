@@ -27,6 +27,7 @@ import java.util.List;
 
 public class CategoryFragment extends Fragment {
     private GridLayout categoryContainer;
+    private AppCompatButton clickedButton = null;
     private RecyclerView recyclerView;
     private TodoAdapter todoAdapter;
     private List<Todo> todoList;
@@ -39,7 +40,6 @@ public class CategoryFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_category, container, false);
 
         MainActivity mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
 
         todoList = new ArrayList<>();
         todoAdapter = new TodoAdapter(todoList, mainActivity.getSupportFragmentManager(), mainActivity);
@@ -65,8 +65,7 @@ public class CategoryFragment extends Fragment {
         return rootView;
     }
 
-    private AppCompatButton clickedButton = null;
-
+    /* 카테고리 버튼 생성 */
     private void addCategoryBtn(String category, String color, MainActivity mainActivity) {
         AppCompatButton newCategoryBtn = new AppCompatButton(getContext());
 
