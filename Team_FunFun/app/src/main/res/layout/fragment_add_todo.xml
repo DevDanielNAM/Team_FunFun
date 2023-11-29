@@ -117,9 +117,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginHorizontal="12dp"
                     android:layout_marginVertical="15dp"
-                    android:columnCount="2" />
+                    android:columnCount="3" />
 
             </LinearLayout>
 

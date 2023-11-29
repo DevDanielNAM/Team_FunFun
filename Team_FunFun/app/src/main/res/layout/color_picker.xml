@@ -1,12 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+        >
 
-    <TextView
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test"></TextView>
+        <GridLayout
+            android:id="@+id/colorPickerGridLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:padding="16dp"
+            android:rowCount="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker1" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker2" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker3" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker4" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker5"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker5" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker6"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker6" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker7"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker7" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker8"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker8" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/colorPicker9"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_picker9" />
+
+        </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
