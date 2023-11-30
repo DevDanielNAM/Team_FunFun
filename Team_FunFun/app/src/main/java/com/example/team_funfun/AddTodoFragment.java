@@ -99,10 +99,22 @@ public class AddTodoFragment extends Fragment {
                     });
                     denyDialog.show();
                 } else if(!categoryInput.getText().toString().equals("")) {
-                    mainActivity.insertCategoryData(categoryInput.getText().toString(), hexCodeColor);
-                    categoryInput.setText("");
-                    Toast.makeText(getContext(), "카테고리가 추가되었습니다!", Toast.LENGTH_LONG).show();
-                    renderCategoryBtn(mainActivity);
+                    try {
+                        mainActivity.insertCategoryData(categoryInput.getText().toString(), hexCodeColor);
+                        categoryInput.setText("");
+                        Toast.makeText(getContext(), "카테고리가 추가되었습니다!", Toast.LENGTH_LONG).show();
+                        renderCategoryBtn(mainActivity);
+                    } catch (Exception e) {
+                        denyDialog.setTitle("추가 불가!");
+                        denyDialog.setMessage("이미 존재하는 카테고리입니다!");
+                        denyDialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        denyDialog.show();
+                    }
                 } else {
                     denyDialog.setTitle("미입력!");
                     denyDialog.setMessage("추가할 카테고리를 입력해주세요!");
@@ -120,7 +132,18 @@ public class AddTodoFragment extends Fragment {
         deleteCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!clickedCategory.equals("")) {
+                if(clickedCategory.equals("오늘까지")) {
+                    AlertDialog.Builder denyDialog = new AlertDialog.Builder(getContext());
+                    denyDialog.setTitle("삭제불가!");
+                    denyDialog.setMessage("'오늘까지' 카테고리는 삭제할 수 없습니다!");
+                    denyDialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    denyDialog.show();
+                } else if(!clickedCategory.equals("")) {
                     mainActivity.deleteCategoryData(clickedCategory);
                     Toast.makeText(getContext(), "카테고리가 삭제되었습니다!", Toast.LENGTH_LONG).show();
                     renderCategoryBtn(mainActivity);

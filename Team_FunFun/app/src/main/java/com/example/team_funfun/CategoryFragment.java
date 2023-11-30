@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,8 +115,17 @@ public class CategoryFragment extends Fragment {
 
                         // 현재 클릭된 버튼을 clickedDrawable로 변경
                         newCategoryBtn.setBackgroundDrawable(clickedDrawable);
+                        List<String[]> todoList;
 
-                        List<String[]> todoList = mainActivity.getTodoData(category);
+                        if(newCategoryBtn.getText().toString().equals("오늘까지")) {
+                            java.util.Date currentDate = new java.util.Date();
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                            Date todayDate = Date.valueOf(formatter.format(currentDate));
+                            todoList = mainActivity.getTodoData(todayDate);
+                        } else {
+                            todoList = mainActivity.getTodoData(category);
+                        }
+
                         for (String[] todoData : todoList) {
                             addTodoItem(todoData[0],                // todo content
                                     Date.valueOf(todoData[1]),      // date
