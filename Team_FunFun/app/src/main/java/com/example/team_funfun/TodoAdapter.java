@@ -29,11 +29,13 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
     private MainActivity mainActivity;
 
     EditTodoFragment editTodoFragment;
+    private CalendarFragment calendarFragment; // 새로 추가
 
-    public TodoAdapter(List<Todo> todoList, FragmentManager fragmentManager, MainActivity mainActivity) {
+    public TodoAdapter(List<Todo> todoList, FragmentManager fragmentManager, MainActivity mainActivity, CalendarFragment calendarFragment) {
         this.todoList = todoList;
         this.fragmentManager = fragmentManager;
         this.mainActivity = mainActivity;
+        this.calendarFragment = calendarFragment; // 새로 추가
     }
 
     @NonNull
@@ -114,6 +116,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
                 editTodoFragment.setArguments(bundle);
                 fragmentManager.beginTransaction().replace(R.id.container, editTodoFragment).commit();
                 notifyDataSetChanged();
+                calendarFragment.updateCalendar(); // 새로 추기
             }
         });
 
@@ -124,6 +127,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
                 todoList.remove(todo);
                 Toast.makeText(mainActivity, "Todo가 삭제되었습니다!", Toast.LENGTH_LONG).show();
                 notifyDataSetChanged();
+                calendarFragment.updateCalendar(); // 새로 추가
             }
         });
     }
