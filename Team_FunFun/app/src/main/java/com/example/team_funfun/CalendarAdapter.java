@@ -76,6 +76,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     }
     public void updateTodoData(List<String[]> updatedTodoData) {
         this.todoDataList = updatedTodoData;
-        notifyDataSetChanged();
+        notifyDataSetChanged(); // 데이터셋이 변경되었음을 알림
     }
 }

@@ -34,16 +34,16 @@ public class CategoryFragment extends Fragment {
     private List<Todo> todoList;
     FloatingActionButton floatingAddBtn;
     AddTodoFragment addTodoFragment;
-
+CalendarFragment calendarFragment;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_category, container, false);
 
         MainActivity mainActivity = (MainActivity) getActivity();
-
+        calendarFragment= new CalendarFragment();
         todoList = new ArrayList<>();
-        todoAdapter = new TodoAdapter(todoList, mainActivity.getSupportFragmentManager(), mainActivity);
+        todoAdapter = new TodoAdapter(todoList, mainActivity.getSupportFragmentManager(), mainActivity,calendarFragment);
 
         recyclerView = rootView.findViewById(R.id.todoContainer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
