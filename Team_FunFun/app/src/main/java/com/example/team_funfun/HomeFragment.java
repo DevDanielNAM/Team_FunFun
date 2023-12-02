@@ -22,8 +22,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 MainActivity mainActivity = (MainActivity)getActivity();
-                System.out.println("clicked");
-                assert mainActivity != null;
                 mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, addTodoFragment).commit();
             }
         });

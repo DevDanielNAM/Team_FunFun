@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -121,6 +122,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
             public void onClick(View v) {
                 mainActivity.deleteTodoData(todo.getContent());
                 todoList.remove(todo);
+                Toast.makeText(mainActivity, "Todo가 삭제되었습니다!", Toast.LENGTH_LONG).show();
                 notifyDataSetChanged();
             }
         });

@@ -177,6 +177,31 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    /* 입력받은 Date에 해당하는 Todo 검색 */
+    public List<String[]> getTodoData(Date paramDate){
+        println("getTodoData(paramDate) 호출됨.");
+        List<String[]> todoList = new ArrayList<>();
+        if(todoDb != null){
+            String sql = "SELECT todo, date, state, category, _id FROM Todo WHERE date = " + "'" + paramDate + "'";
+            Cursor cursor = todoDb.rawQuery(sql, null);
+            println("조회된 데이터개수 :" + cursor.getCount());
+
+            while (cursor.moveToNext()){
+                String todo = cursor.getString(0);
+                Date date = Date.valueOf(cursor.getString(1));
+                int state = cursor.getInt(2);
+                String category = cursor.getString(3);
+                int id = cursor.getInt(4);
+                String[] todoData = {todo, date.toString(), String.valueOf(state), category, String.valueOf(id)};
+                todoList.add(todoData);
+                println(todo + date + state + category + id);
+            }
+            cursor.close();
+            return todoList;
+        }
+        return null;
+    }
+
     /* 전달받은 Data들로 Todo table 수정 */
     public void updateTodoData(String todo, Date date, int state, String category, int _id) {
         println("updateTodoData() 호출됨.");
@@ -247,19 +272,16 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     /* Category table에 Data 저장 */
-    public void insertCategoryData(String category, String color){
+    public void insertCategoryData(String category, String color) throws Exception {
         println("insertCategoryData() 호출됨.");
-        try {
-            if(todoDb != null && !category.equals("")){
-                String sql = "INSERT INTO Category(categoryName, color) VALUES(?, ?)";
-                Object[] params = {category, color};
-                todoDb.execSQL(sql, params);
-                println("데이터 추가함");
-            }
-        } catch (Exception e) {
-            println(e.toString());
+        if(todoDb != null && !category.equals("")){
+            String sql = "INSERT INTO Category(categoryName, color) VALUES(?, ?)";
+            Object[] params = {category, color};
+            todoDb.execSQL(sql, params);
+            println("데이터 추가함");
         }
 
+        throw new Exception();
     }
 
     /* Category table에 저장된 category 개수 조회 */
