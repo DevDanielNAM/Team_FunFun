@@ -127,29 +127,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* Todo table에 저장된 Data들 조회 */
-//    public List<String[]> getTodoData(){
-//        println("getTodoData() 호출됨.");
-//        List<String[]> todoList = new ArrayList<>();
-//        if(todoDb != null){
-//            String sql = "select todo, date, state, category, Category.color from Todo " +
-//                    "inner join Category on Todo.category = Category.categoryName";
-//            Cursor cursor = todoDb.rawQuery(sql, null);
-//            println("조회된 데이터개수 :" + cursor.getCount());
-//
-//            while (cursor.moveToNext()){
-//                String todo = cursor.getString(0);
-//                Date date = Date.valueOf(cursor.getString(1));
-//                int state = cursor.getInt(2);
-//                String category = cursor.getString(3);
-//                String color = cursor.getString(4);
-//                String[] todoData = {todo, date.toString(), String.valueOf(state), category, color};
-//                todoList.add(todoData);
-//            }
-//            cursor.close();
-//            return todoList;
-//        }
-//        return null;
-//    }
+    public List<String[]> getTodoData(){
+        println("getTodoData() 호출됨.");
+        List<String[]> todoList = new ArrayList<>();
+        if(todoDb != null){
+            String sql = "select todo, date, state, category, Category.color, _id from Todo " +
+                    "inner join Category on Todo.category = Category.categoryName";
+            Cursor cursor = todoDb.rawQuery(sql, null);
+            println("조회된 데이터개수 :" + cursor.getCount());
+
+            while (cursor.moveToNext()){
+                String todo = cursor.getString(0);
+                Date date = Date.valueOf(cursor.getString(1));
+                int state = cursor.getInt(2);
+                String category = cursor.getString(3);
+                String color = cursor.getString(4);
+                int id = cursor.getInt(5);
+                String[] todoData = {todo, date.toString(), String.valueOf(state), category, color, String.valueOf(id)};
+                todoList.add(todoData);
+            }
+            cursor.close();
+            return todoList;
+        }
+        return null;
+    }
 
     /* Todo table에서 전달받은 category에 해당하는 모든 Data들을 조회 */
     public List<String[]> getTodoData(String paramCategory){

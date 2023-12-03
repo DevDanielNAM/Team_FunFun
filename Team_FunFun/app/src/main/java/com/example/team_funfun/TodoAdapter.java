@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Date;
@@ -29,11 +30,13 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
     private MainActivity mainActivity;
 
     EditTodoFragment editTodoFragment;
+    CalendarFragment calendarFragment; // 새로 추가
 
-    public TodoAdapter(List<Todo> todoList, FragmentManager fragmentManager, MainActivity mainActivity) {
+    public TodoAdapter(List<Todo> todoList, FragmentManager fragmentManager, MainActivity mainActivity, CalendarFragment calendarFragment) {
         this.todoList = todoList;
         this.fragmentManager = fragmentManager;
         this.mainActivity = mainActivity;
+        this.calendarFragment = calendarFragment; // 새로 추가
     }
 
     @NonNull
@@ -109,7 +112,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
                 bundle.putString("date", todo.getDate().toString());
                 bundle.putString("category", todo.getCategory());
                 bundle.putInt("id", todo.getId());
-
+                if (calendarFragment != null) {
+                    calendarFragment.updateCalendar();
+                    //calendarFragment.setArguments(bundle);
+                }
                 editTodoFragment = new EditTodoFragment();
                 editTodoFragment.setArguments(bundle);
                 fragmentManager.beginTransaction().replace(R.id.container, editTodoFragment).commit();
@@ -124,6 +130,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
                 todoList.remove(todo);
                 Toast.makeText(mainActivity, "Todo가 삭제되었습니다!", Toast.LENGTH_LONG).show();
                 notifyDataSetChanged();
+                if (calendarFragment != null) {
+                    calendarFragment.updateCalendar();
+                }
             }
         });
     }
