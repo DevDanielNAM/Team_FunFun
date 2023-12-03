@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     AddTodoFragment addTodoFragment;
+    private TextView todayTextView;
     private RecyclerView recyclerView;
     private TodoAdapter todoAdapter;
     private List<Todo> todoList; // 어댑터로 리사이클러 뷰에 보여줄 값
@@ -31,7 +33,7 @@ public class HomeFragment extends Fragment {
 
         MainActivity mainActivity = (MainActivity) getActivity();
         calendarFragment = new CalendarFragment();
-
+        todayTextView = rootView.findViewById(R.id.todayTextView);
         todoList = new ArrayList<>();
         todoAdapter = new TodoAdapter(todoList, mainActivity.getSupportFragmentManager(), mainActivity,calendarFragment);
 
@@ -43,6 +45,9 @@ public class HomeFragment extends Fragment {
         todoDataList = mainActivity.getTodoData(today);
         System.out.println("오늘 일정 >> " + todoDataList.get(0)[0]);
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+        String formattedDate = dateFormat.format(today);
+        todayTextView.setText(formattedDate);
         for (String[] str : todoDataList) { // db에서 가져온 투두리스트
             String todoContent = str[0];
             java.util.Date date = java.sql.Date.valueOf(str[1]);

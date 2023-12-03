@@ -49,6 +49,16 @@
             android:text="+ Todo 추가"
             android:textColor="@color/white"
             android:textSize="24sp" />
+        <TextView
+            android:id="@+id/todayTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text=""
+            android:fontFamily="@font/dohyeon_regular"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todoContainer"
             android:layout_width="380dp"

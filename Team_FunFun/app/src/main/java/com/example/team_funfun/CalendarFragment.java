@@ -25,6 +25,7 @@ import java.util.List;
 
 public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private TextView monthYearText;
+    private TextView todayTextView;
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
 
@@ -47,6 +48,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         monthYearText = view.findViewById(R.id.monthYearTV);
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         todoRecyclerView = view.findViewById(R.id.todoRecyclerView);
+        todayTextView = view.findViewById(R.id.todayTextView);
+
         mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
 
@@ -82,6 +85,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 selectedDate = selectedDate.minusMonths(1);
                 setMonthView();
                 updateCalendar();
+                todayTextView.setText("");
             }
         });
 
@@ -95,6 +99,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 selectedDate = selectedDate.plusMonths(1);
                 setMonthView();
                 updateCalendar();
+                todayTextView.setText("");
             }
         });
 
@@ -137,6 +142,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
     @Override
     public void OnItemClick(int position, String dayText) {
+
         todoList.clear();
         todoAdapter.notifyDataSetChanged();
         todoDataList = mainActivity.getTodoData();
@@ -144,7 +150,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         if (!dayText.equals("")) {
             //String msg = monthYearFromDate(selectedDate) + " " + dayText + " 선택했음.";
             //Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
-
+            String msg = monthYearFromDate(selectedDate);
+            if (dayText.length() == 1)
+                msg+=" "+String.format("%02d", Integer.parseInt(dayText))+"일";
+            else msg+=" "+dayText+"일";
+            todayTextView.setText(msg);
             // 이전에 클릭한 셀의 테두리 제거
             if (lastClickedCell != null) {
                 lastClickedCell.setBackgroundResource(0); // 0은 아무 테두리도 없는 리소스 ID
@@ -157,7 +167,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 lastClickedCell = clickedCell;
             }
         }
-
+        else todayTextView.setText("");
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
