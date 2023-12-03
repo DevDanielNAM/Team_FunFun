@@ -25,6 +25,7 @@ import java.util.List;
 
 public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private TextView monthYearText;
+    private TextView todayTextView;
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
 
@@ -36,14 +37,19 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private List<String[]> todoDataList; // string[5] = { todo, date, state, category, color }
 
     private MainActivity mainActivity;
+    private Button addBtn;
+    private AddTodoFragment addTodoFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
+        addBtn = view.findViewById(R.id.mainAddTodo);
         monthYearText = view.findViewById(R.id.monthYearTV);
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         todoRecyclerView = view.findViewById(R.id.todoRecyclerView);
+        todayTextView = view.findViewById(R.id.todayTextView);
+
         mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
 
@@ -61,7 +67,14 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         Button previousButton = view.findViewById(R.id.previousButton);
         Button nextButton = view.findViewById(R.id.nextButton);
-
+        addTodoFragment = new AddTodoFragment();
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity)getActivity();
+                mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, addTodoFragment).commit();
+            }
+        });
         previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +84,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 todoAdapter.notifyDataSetChanged(); // 데이터 갱신
                 selectedDate = selectedDate.minusMonths(1);
                 setMonthView();
+                updateCalendar();
+                todayTextView.setText("");
             }
         });
 
@@ -83,6 +98,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 todoAdapter.notifyDataSetChanged(); // 데이터 갱신
                 selectedDate = selectedDate.plusMonths(1);
                 setMonthView();
+                updateCalendar();
+                todayTextView.setText("");
             }
         });
 
@@ -125,14 +142,19 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
     @Override
     public void OnItemClick(int position, String dayText) {
+
         todoList.clear();
         todoAdapter.notifyDataSetChanged();
         todoDataList = mainActivity.getTodoData();
 
         if (!dayText.equals("")) {
-            String msg = monthYearFromDate(selectedDate) + " " + dayText + " 선택했음.";
-            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
-
+            //String msg = monthYearFromDate(selectedDate) + " " + dayText + " 선택했음.";
+            //Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+            String msg = monthYearFromDate(selectedDate);
+            if (dayText.length() == 1)
+                msg+=" "+String.format("%02d", Integer.parseInt(dayText))+"일";
+            else msg+=" "+dayText+"일";
+            todayTextView.setText(msg);
             // 이전에 클릭한 셀의 테두리 제거
             if (lastClickedCell != null) {
                 lastClickedCell.setBackgroundResource(0); // 0은 아무 테두리도 없는 리소스 ID
@@ -145,7 +167,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 lastClickedCell = clickedCell;
             }
         }
-
+        else todayTextView.setText("");
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -157,12 +179,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         for (String[] str : todoDataList) { // db에서 가져온 투두리스트
             String todoContent = str[0];
-            Date date = null;
-            try {
-                date = formatter.parse(str[1]); // string -> Date 객체로 변환
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
+            Date date = java.sql.Date.valueOf(str[1]);
             int state = Integer.parseInt(str[2]);
             String category = str[3];
             int id = Integer.parseInt(str[5]);
@@ -184,14 +201,20 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     }
 
 
-    public void updateCalendar() {
-        // CalendarAdapter에게 데이터가 변경되었음을 알림
+    public void updateCalendar() { //데이터가 변경되었음을 알림
         mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
-        calendarAdapter.updateTodoData(mainActivity.getTodoData());
-        System.out.println("투두갱신");
+        if (mainActivity != null && calendarRecyclerView != null) {
 
-        // RecyclerView를 갱신
-        calendarAdapter.notifyDataSetChanged();
-    }
+            todoDataList = mainActivity.getTodoData();
+
+            ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
+            calendarAdapter = new CalendarAdapter(daysInMonth, todoDataList, this, selectedDate);
+            calendarAdapter.updateTodoData(todoDataList);
+
+            // RecyclerView를 갱신
+            calendarRecyclerView.setAdapter(calendarAdapter);
+            calendarAdapter.notifyDataSetChanged();
+        }
+
+}
 }
