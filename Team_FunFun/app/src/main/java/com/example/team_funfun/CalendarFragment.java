@@ -71,6 +71,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 todoAdapter.notifyDataSetChanged(); // 데이터 갱신
                 selectedDate = selectedDate.minusMonths(1);
                 setMonthView();
+                updateCalendar();
             }
         });
 
@@ -83,6 +84,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 todoAdapter.notifyDataSetChanged(); // 데이터 갱신
                 selectedDate = selectedDate.plusMonths(1);
                 setMonthView();
+                updateCalendar();
             }
         });
 
@@ -157,12 +159,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         for (String[] str : todoDataList) { // db에서 가져온 투두리스트
             String todoContent = str[0];
-            Date date = null;
-            try {
-                date = formatter.parse(str[1]); // string -> Date 객체로 변환
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
+            Date date = java.sql.Date.valueOf(str[1]);
             int state = Integer.parseInt(str[2]);
             String category = str[3];
             int id = Integer.parseInt(str[5]);
@@ -184,14 +181,20 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     }
 
 
-    public void updateCalendar() {
-        // CalendarAdapter에게 데이터가 변경되었음을 알림
+    public void updateCalendar() { //데이터가 변경되었음을 알림
         mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
-        calendarAdapter.updateTodoData(mainActivity.getTodoData());
-        System.out.println("투두갱신");
+        if (mainActivity != null && calendarRecyclerView != null) {
 
-        // RecyclerView를 갱신
-        calendarAdapter.notifyDataSetChanged();
-    }
+            todoDataList = mainActivity.getTodoData();
+
+            ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
+            calendarAdapter = new CalendarAdapter(daysInMonth, todoDataList, this, selectedDate);
+            calendarAdapter.updateTodoData(todoDataList);
+
+            // RecyclerView를 갱신
+            calendarRecyclerView.setAdapter(calendarAdapter);
+            calendarAdapter.notifyDataSetChanged();
+        }
+
+}
 }

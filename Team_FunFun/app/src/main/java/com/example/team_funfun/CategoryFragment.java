@@ -34,7 +34,7 @@ public class CategoryFragment extends Fragment {
     private List<Todo> todoList;
     FloatingActionButton floatingAddBtn;
     AddTodoFragment addTodoFragment;
-CalendarFragment calendarFragment;
+    CalendarFragment calendarFragment;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
