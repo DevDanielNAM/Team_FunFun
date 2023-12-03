@@ -142,7 +142,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/calendarRecyclerView" />
-
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/mainAddTodo"
+                android:layout_width="380dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:background="@drawable/add_button_round"
+                android:fontFamily="@font/ibm_plex_sans_kr_medium"
+                android:textAllCaps="false"
+                android:text="+ Todo 추가"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/todoRecyclerView"
                 android:layout_width="380dp"

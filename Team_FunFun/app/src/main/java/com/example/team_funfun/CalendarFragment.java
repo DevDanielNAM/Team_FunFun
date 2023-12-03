@@ -36,11 +36,14 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private List<String[]> todoDataList; // string[5] = { todo, date, state, category, color }
 
     private MainActivity mainActivity;
+    private Button addBtn;
+    private AddTodoFragment addTodoFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
+        addBtn = view.findViewById(R.id.mainAddTodo);
         monthYearText = view.findViewById(R.id.monthYearTV);
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         todoRecyclerView = view.findViewById(R.id.todoRecyclerView);
@@ -61,7 +64,14 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         Button previousButton = view.findViewById(R.id.previousButton);
         Button nextButton = view.findViewById(R.id.nextButton);
-
+        addTodoFragment = new AddTodoFragment();
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity)getActivity();
+                mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, addTodoFragment).commit();
+            }
+        });
         previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,8 +142,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         todoDataList = mainActivity.getTodoData();
 
         if (!dayText.equals("")) {
-            String msg = monthYearFromDate(selectedDate) + " " + dayText + " 선택했음.";
-            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+            //String msg = monthYearFromDate(selectedDate) + " " + dayText + " 선택했음.";
+            //Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
             // 이전에 클릭한 셀의 테두리 제거
             if (lastClickedCell != null) {

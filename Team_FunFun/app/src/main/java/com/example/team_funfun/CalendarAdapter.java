@@ -1,6 +1,7 @@
 package com.example.team_funfun;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,11 +57,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
                     if(str[0].length() > 4) todo= str[0].substring(0,4);
                     else todo = str[0];
                     holder.dayOfToDo.setText(todo);
-                    holder.dayOfToDo.setBackgroundColor(Color.parseColor(str[4]));
+                    //holder.dayOfToDo.setBackgroundColor(Color.parseColor(str[4]));
+                    GradientDrawable gradientDrawable = new GradientDrawable();
+                    gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+                    gradientDrawable.setColor(Color.parseColor(str[4]));
+                    gradientDrawable.setCornerRadius(17); // 조절 가능한 반지름 값
 
+                    holder.dayOfToDo.setBackground(gradientDrawable);
                 }
-                //System.out.println(str[0]);
-
             }
         }
 

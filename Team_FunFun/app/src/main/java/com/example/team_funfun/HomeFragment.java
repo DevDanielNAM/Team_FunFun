@@ -11,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     AddTodoFragment addTodoFragment;
@@ -36,7 +39,22 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(todoAdapter);
 
-        //todoDataList = mainActivity.getTodoData();
+        Date today = new Date(System.currentTimeMillis());
+        todoDataList = mainActivity.getTodoData(today);
+        System.out.println("오늘 일정 >> " + todoDataList.get(0)[0]);
+
+        for (String[] str : todoDataList) { // db에서 가져온 투두리스트
+            String todoContent = str[0];
+            java.util.Date date = java.sql.Date.valueOf(str[1]);
+            int state = Integer.parseInt(str[2]);
+            String category = str[3];
+            int id = Integer.parseInt(str[4]);
+            todoList.add(new Todo(todoContent, date, state, category, id)); // db에서 가져온 투두리스트를 화면에 보여주기위함
+        }
+
+        todoAdapter.notifyItemInserted(todoList.size() - 1);
+        todoAdapter.notifyDataSetChanged(); // 데이터 갱신
+
         addTodoFragment = new AddTodoFragment();
         Button addBtn = rootView.findViewById(R.id.mainAddTodo);
 

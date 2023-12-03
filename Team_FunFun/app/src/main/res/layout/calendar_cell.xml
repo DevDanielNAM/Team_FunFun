@@ -19,7 +19,7 @@
 
 
                         <TextView
-                            android:layout_width="100dp"
+                            android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/cellDayText"
                             android:text="1"
@@ -29,7 +29,7 @@
 
                         <TextView
                             android:id="@+id/cellToDoText"
-                            android:layout_width="100dp"
+                            android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:text=""
                             android:textColor="@color/white"
