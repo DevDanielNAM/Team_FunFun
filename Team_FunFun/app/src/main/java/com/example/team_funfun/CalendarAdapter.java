@@ -57,7 +57,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
                     if(str[0].length() > 4) todo= str[0].substring(0,4);
                     else todo = str[0];
                     holder.dayOfToDo.setText(todo);
-                    //holder.dayOfToDo.setBackgroundColor(Color.parseColor(str[4]));
                     GradientDrawable gradientDrawable = new GradientDrawable();
                     gradientDrawable.setShape(GradientDrawable.RECTANGLE);
                     gradientDrawable.setColor(Color.parseColor(str[4]));

@@ -29,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
@@ -44,7 +46,7 @@ public class EditTodoFragment extends Fragment {
     EditText dateInput;
     EditText categoryInput;
     ImageButton colorPicker;
-    CategoryFragment categoryFragment;
+    HomeFragment homeFragment;
     String clickedCategory = "";
     String content;
     String date;
@@ -67,7 +69,7 @@ public class EditTodoFragment extends Fragment {
             id = args.getInt("id", 0);
         }
 
-        categoryFragment = new CategoryFragment();
+        homeFragment = new HomeFragment();
 
         editTodo = rootView.findViewById(R.id.editTodo);
         addCategory = rootView.findViewById(R.id.addCategory);
@@ -159,7 +161,6 @@ public class EditTodoFragment extends Fragment {
                 } else if(!clickedCategory.equals("")) {
                     mainActivity.deleteCategoryData(clickedCategory);
                     renderCategoryBtn(mainActivity);
-                    Toast.makeText(getContext(), "카테고리가 삭제되었습니다!", Toast.LENGTH_LONG).show();
                 } else {
                     AlertDialog.Builder denyDialog = new AlertDialog.Builder(getContext());
                     denyDialog.setTitle("미선택!");
@@ -226,7 +227,9 @@ public class EditTodoFragment extends Fragment {
                                         clickedCategory,
                                         id);
                             }
-                            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, categoryFragment).commit();
+                            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+                            NavigationBarView navigationBarView = mainActivity.findViewById(R.id.bottomNavBar);
+                            navigationBarView.setSelectedItemId(R.id.home);
                             dialog.dismiss();
                             Toast.makeText(getContext(), "Todo가 수되었습니다!", Toast.LENGTH_LONG).show();
                         }

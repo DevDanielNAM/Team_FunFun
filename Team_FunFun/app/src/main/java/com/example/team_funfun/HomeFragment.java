@@ -43,7 +43,6 @@ public class HomeFragment extends Fragment {
 
         Date today = new Date(System.currentTimeMillis());
         todoDataList = mainActivity.getTodoData(today);
-        System.out.println("오늘 일정 >> " + todoDataList.get(0)[0]);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
         String formattedDate = dateFormat.format(today);
