@@ -51,7 +51,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         todayTextView = view.findViewById(R.id.todayTextView);
 
         mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
 
         todoDataList = mainActivity.getTodoData();
         selectedDate = LocalDate.now();
@@ -148,8 +147,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         todoDataList = mainActivity.getTodoData();
 
         if (!dayText.equals("")) {
-            //String msg = monthYearFromDate(selectedDate) + " " + dayText + " 선택했음.";
-            //Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
             String msg = monthYearFromDate(selectedDate);
             if (dayText.length() == 1)
                 msg+=" "+String.format("%02d", Integer.parseInt(dayText))+"일";

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openDatabase(String dbName){
         println("openDatabase() 호출됨");
-        todoDb = openOrCreateDatabase(dbName, MODE_PRIVATE,null) ; //보안때문에 요즘은 대부분 PRIVATE사용, SQLiteDatabase객체가 반환됨
+        todoDb = openOrCreateDatabase(dbName, MODE_PRIVATE,null) ;
         if(todoDb !=null){
             println("Todo 데이터베이스 오픈됨");
         }
@@ -93,9 +93,22 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (isTableEmpty("Todo")) {
-                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('OSS 온라인 강의', '2023-12-01', 0, '할 일')");
-                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('자료구조 과제', '2023-12-03', 0, '할 일')");
-                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('알고리즘', '2023-12-23', 0, '스터디')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('계절학기 신청', '2023-11-16', 1, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('리눅스 과제', '2023-11-21', 1, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('리눅스 온라인 강의', '2023-12-01', 1, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('Java 스터디', '2023-12-02', 1, '스터디')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('모바일프로그래밍 과제', '2023-12-06', 1, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('누리관 앞 1시까지', '2023-12-10', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('프로젝트 회의', '2023-12-13', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('SW 과제', '2023-12-18', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('교수님 상담', '2023-12-19', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('OSS 온라인 강의', '2023-12-21', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('알고리즘 과제', '2023-12-22', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('자료구조 과제', '2023-12-23', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('토익 시험', '2023-12-30', 0, '할 일')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('알고리즘', '2023-12-22', 0, '스터디')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('자료구조', '2023-12-23', 0, '스터디')");
+                todoDb.execSQL("INSERT INTO Todo (todo, date, state, category) VALUES ('토익스터디', '2023-12-27', 0, '스터디')");
             }
         } else {
             println("데이터베이스를 먼저 오픈하세요");
@@ -250,38 +263,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public void selectTodoData(){
-//        println("selectTodoData() 호출됨.");
-//        if(todoDb != null){
-//            String sql = "select todo, date, state, category, Category.color from Todo " +
-//                    "inner join Category on Todo.category = Category.categoryName";
-//            Cursor cursor = todoDb.rawQuery(sql, null);
-//            println("조회된 데이터개수 :" + cursor.getCount());
-//            int i = 0;
-//            while (cursor.moveToNext()){
-//                i++;
-//                String todo = cursor.getString(0);
-//                Date date = Date.valueOf(cursor.getString(1));
-//                int state = cursor.getInt(2);
-//                String category = cursor.getString(3);
-//                String color = cursor.getString(4);
-//                println("#" + i + " -> " + todo + ", " + date + ", " + category + "," + state + "," + color);
-//            }
-//            cursor.close();
-//        }
-//    }
-
     /* Category table에 Data 저장 */
     public void insertCategoryData(String category, String color) throws Exception {
         println("insertCategoryData() 호출됨.");
-        if(todoDb != null && !category.equals("")){
-            String sql = "INSERT INTO Category(categoryName, color) VALUES(?, ?)";
-            Object[] params = {category, color};
-            todoDb.execSQL(sql, params);
-            println("데이터 추가함");
+        try {
+            if(todoDb != null && !category.equals("")){
+                String sql = "INSERT INTO Category(categoryName, color) VALUES(?, ?)";
+                Object[] params = {category, color};
+                todoDb.execSQL(sql, params);
+                println("데이터 추가함");
+            }
+        } catch (Exception e) {
+            throw e;
         }
-
-        throw new Exception();
     }
 
     /* Category table에 저장된 category 개수 조회 */
