@@ -47,7 +47,7 @@ public class AddTodoFragment extends Fragment {
     EditText categoryInput;
     String clickedCategory = "";
     ImageButton colorPicker;
-    CategoryFragment categoryFragment;
+    HomeFragment homeFragment;
     String hexCodeColor = "#FFBF65";
 
     @Override
@@ -58,7 +58,7 @@ public class AddTodoFragment extends Fragment {
 
         MainActivity mainActivity = (MainActivity)getActivity();
 
-        categoryFragment = new CategoryFragment();
+        homeFragment = new HomeFragment();
 
         addTodo = rootView.findViewById(R.id.addTodo);
         addCategory = rootView.findViewById(R.id.addCategory);
@@ -145,7 +145,6 @@ public class AddTodoFragment extends Fragment {
                     denyDialog.show();
                 } else if(!clickedCategory.equals("")) {
                     mainActivity.deleteCategoryData(clickedCategory);
-                    Toast.makeText(getContext(), "카테고리가 삭제되었습니다!", Toast.LENGTH_LONG).show();
                     renderCategoryBtn(mainActivity);
                 } else {
                     AlertDialog.Builder denyDialog = new AlertDialog.Builder(getContext());
@@ -202,7 +201,9 @@ public class AddTodoFragment extends Fragment {
                                         0,
                                         clickedCategory);
                             }
-                            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, categoryFragment).commit();
+                            mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+                            NavigationBarView navigationBarView = mainActivity.findViewById(R.id.bottomNavBar);
+                            navigationBarView.setSelectedItemId(R.id.home);
                             dialog.dismiss();
                             Toast.makeText(getContext(), "Todo가 추가되었습니다!", Toast.LENGTH_LONG).show();
                         }

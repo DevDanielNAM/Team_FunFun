@@ -30,13 +30,13 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
     private MainActivity mainActivity;
 
     EditTodoFragment editTodoFragment;
-    CalendarFragment calendarFragment; // 새로 추가
+    CalendarFragment calendarFragment;
 
     public TodoAdapter(List<Todo> todoList, FragmentManager fragmentManager, MainActivity mainActivity, CalendarFragment calendarFragment) {
         this.todoList = todoList;
         this.fragmentManager = fragmentManager;
         this.mainActivity = mainActivity;
-        this.calendarFragment = calendarFragment; // 새로 추가
+        this.calendarFragment = calendarFragment;
     }
 
     @NonNull
@@ -53,8 +53,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
         Todo todo = todoList.get(position);
 
         holder.todoContent.setText(todo.getContent());
-
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         Drawable redDrawable = ContextCompat.getDrawable(mainActivity, R.drawable.red_circle);
         GradientDrawable gradientRedDrawable = (GradientDrawable) redDrawable;
@@ -114,7 +112,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
                 bundle.putInt("id", todo.getId());
                 if (calendarFragment != null) {
                     calendarFragment.updateCalendar();
-                    //calendarFragment.setArguments(bundle);
                 }
                 editTodoFragment = new EditTodoFragment();
                 editTodoFragment.setArguments(bundle);
